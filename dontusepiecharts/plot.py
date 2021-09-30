@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy
+import pywaffle
 
 def sort_data(data, labels):
     sorted_pairs = sorted(zip(data, labels))
@@ -21,9 +22,16 @@ def process_data(data, labels, sort, reverse, percentage, format_percentage):
     return data, labels
 
 def plot_pie(data, labels, output_path):
-    fig = plt.figure(figsize=(5.0, 5.0), dpi=100)
+    fig = plt.figure(figsize=(10.0, 10.0), dpi=100)
     ax = fig.add_axes([0,0,1,1])
     ax.pie(data, labels=labels)
+    fig.savefig(output_path, bbox_inches='tight')
+
+def plot_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):
+    data, labels = process_data(data, labels, sort, reverse, percentage, format_percentage)
+    fig = plt.figure(figsize=(10.0, 3.0), dpi=100)
+    ax = fig.add_axes([0,0,1,1])
+    ax.bar(labels, data, height=0.1)
     fig.savefig(output_path, bbox_inches='tight')
 
 def plot_horizontal_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):
@@ -47,6 +55,20 @@ def plot_horizontal_lollipop(data, labels, output_path, sort=True, reverse=False
     ax.set_ylabel(ylabel)
     if percentage or format_percentage:
         ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(xmax=1.0))
+    fig.savefig(output_path, bbox_inches='tight')
+
+def plot_square_waffle(data, labels, output_path, sort=True, reverse=False, title=None):
+    data, labels = process_data(data, labels, sort, reverse, True, False)
+    fig = plt.figure(
+        figsize=(10.0, 3.0),
+        dpi=100,
+        FigureClass=pywaffle.Waffle,
+        rows=10,
+        columns=10,
+        values=data, #dict(zip(labels, data)),
+        labels=labels,
+        legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
+    )
     fig.savefig(output_path, bbox_inches='tight')
 
 def plot_horizontal_box_and_whisker(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False, xlabel=None, ylabel=None, title=None, whis=None):
