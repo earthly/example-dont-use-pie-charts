@@ -81,9 +81,9 @@ if __name__ == '__main__':
         for amounts in rainfall_by_day_of_week
         ]
     plot.plot_horizontal_lollipop(binary_raining_or_not_by_day_of_week, day_names, 'distribution-of-days-that-experience-rain.png', sort=False, reverse=True, percentage=True,
-        title='distribution of days that experienced rain >= 1mm, values sum to 100%',
+        title='percentage of rain by day of week, values sum to 100%',
         xlabel='percentage of rainy days',
             )
-    plot.plot_square_waffle(binary_raining_or_not_by_day_of_week, day_names, 'distribution-of-days-that-experience-rain-waffle-chart.png', sort=False, reverse=True,
-        title='distribution of days that experienced rain >= 1mm',
+    plot.plot_square_waffle(binary_raining_or_not_by_day_of_week, day_names, 'distribution-of-days-that-experience-rain-waffle-chart.png',
+        title='percentage of rain by day of week',
             )

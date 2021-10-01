@@ -29,9 +29,9 @@ def plot_pie(data, labels, output_path):
 
 def plot_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):
     data, labels = process_data(data, labels, sort, reverse, percentage, format_percentage)
-    fig = plt.figure(figsize=(10.0, 3.0), dpi=100)
+    fig = plt.figure(figsize=(3.0, 5.0), dpi=100)
     ax = fig.add_axes([0,0,1,1])
-    ax.bar(labels, data, height=0.1)
+    ax.bar(labels, data, width=0.1)
     fig.savefig(output_path, bbox_inches='tight')
 
 def plot_horizontal_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):
@@ -58,17 +58,22 @@ def plot_horizontal_lollipop(data, labels, output_path, sort=True, reverse=False
     fig.savefig(output_path, bbox_inches='tight')
 
 def plot_square_waffle(data, labels, output_path, sort=True, reverse=False, title=None):
-    data, labels = process_data(data, labels, sort, reverse, True, False)
+    if sort:
+        reverse = not reverse
+    data, labels = process_data(data, labels, sort, reverse, False, False)
     fig = plt.figure(
         figsize=(10.0, 3.0),
         dpi=100,
         FigureClass=pywaffle.Waffle,
+        starting_location='NW',
+        vertical=True,
         rows=10,
         columns=10,
-        values=data, #dict(zip(labels, data)),
+        values=data,
         labels=labels,
         legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
     )
+    fig.ax.set_title(title)
     fig.savefig(output_path, bbox_inches='tight')
 
 def plot_horizontal_box_and_whisker(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False, xlabel=None, ylabel=None, title=None, whis=None):

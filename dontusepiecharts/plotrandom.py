@@ -17,6 +17,6 @@ if __name__ == '__main__':
     data, labels = get_data()
 
     plot.plot_pie(data, labels, 'pie-chart.png')
-    plot.plot_bar(data, labels, 'horizontal-bar.png')
+    plot.plot_bar(data, labels, 'bar-chart.png', sort=True, reverse=True)
     plot.plot_horizontal_bar(data, labels, 'horizontal-bar-chart.png')
     plot.plot_horizontal_lollipop(data, labels, 'horizontal-lollipop-chart.png')
