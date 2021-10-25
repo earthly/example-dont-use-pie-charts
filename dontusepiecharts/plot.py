@@ -3,6 +3,22 @@ import matplotlib.pyplot as plt
 import numpy
 import pywaffle
 
+def get_extra_args():
+    '''returns extra args set via environment variables; this is only here to allow extra padding as a workaround for the earthly blog wanting to resize figures'''
+    import os
+    savefig_args = {}
+    for extra_arg_key, parser in (
+            ('pad_inches', float),
+            ):
+        val = os.environ.get('NOPIE_' + extra_arg_key)
+        if val:
+            savefig_args[extra_arg_key] = parser(val)
+    print(savefig_args)
+    print(os.environ)
+    return savefig_args
+
+savefig_args = get_extra_args()
+
 def sort_data(data, labels):
     sorted_pairs = sorted(zip(data, labels))
     data, labels = zip(*sorted_pairs)
@@ -25,21 +41,21 @@ def plot_pie(data, labels, output_path):
     fig = plt.figure(figsize=(10.0, 10.0), dpi=100)
     ax = fig.add_axes([0,0,1,1])
     ax.pie(data, labels=labels)
-    fig.savefig(output_path, bbox_inches='tight')
+    fig.savefig(output_path, bbox_inches='tight', **savefig_args)
 
 def plot_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):
     data, labels = process_data(data, labels, sort, reverse, percentage, format_percentage)
     fig = plt.figure(figsize=(3.0, 5.0), dpi=100)
     ax = fig.add_axes([0,0,1,1])
     ax.bar(labels, data, width=0.1)
-    fig.savefig(output_path, bbox_inches='tight')
+    fig.savefig(output_path, bbox_inches='tight', **savefig_args)
 
 def plot_horizontal_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):
     data, labels = process_data(data, labels, sort, reverse, percentage, format_percentage)
     fig = plt.figure(figsize=(10.0, 3.0), dpi=100)
     ax = fig.add_axes([0,0,1,1])
     ax.barh(labels, data, height=0.1)
-    fig.savefig(output_path, bbox_inches='tight')
+    fig.savefig(output_path, bbox_inches='tight', **savefig_args)
 
 def plot_horizontal_lollipop(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False, xlabel=None, ylabel=None, title=None):
     data, labels = process_data(data, labels, sort, reverse, percentage, format_percentage)
@@ -55,7 +71,7 @@ def plot_horizontal_lollipop(data, labels, output_path, sort=True, reverse=False
     ax.set_ylabel(ylabel)
     if percentage or format_percentage:
         ax.xaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(xmax=1.0))
-    fig.savefig(output_path, bbox_inches='tight')
+    fig.savefig(output_path, bbox_inches='tight', **savefig_args)
 
 def plot_square_waffle(data, labels, output_path, sort=True, reverse=False, title=None):
     if sort:
@@ -74,7 +90,7 @@ def plot_square_waffle(data, labels, output_path, sort=True, reverse=False, titl
         legend={'loc': 'upper left', 'bbox_to_anchor': (1, 1)},
     )
     fig.ax.set_title(title)
-    fig.savefig(output_path, bbox_inches='tight')
+    fig.savefig(output_path, bbox_inches='tight', **savefig_args)
 
 def plot_horizontal_box_and_whisker(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False, xlabel=None, ylabel=None, title=None, whis=None):
     data, labels = process_data(data, labels, sort, reverse, percentage, format_percentage)
@@ -85,4 +101,4 @@ def plot_horizontal_box_and_whisker(data, labels, output_path, sort=True, revers
     ax.set_ylabel(ylabel)
     data = numpy.array(data, dtype=object)
     ax.boxplot(data, labels=labels, vert=False, whis=whis)
-    fig.savefig(output_path, bbox_inches='tight')
+    fig.savefig(output_path, bbox_inches='tight', **savefig_args)

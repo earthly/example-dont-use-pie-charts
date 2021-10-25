@@ -8,6 +8,8 @@ code:
     WORKDIR /dontusepiecharts
     COPY --dir data .
     COPY --dir dontusepiecharts .
+    ARG pad_inches="0"
+    ENV NOPIE_pad_inches="$pad_inches"
 
 plot-random:
     FROM +code
@@ -25,6 +27,10 @@ plot-pacman:
     SAVE ARTIFACT *.png AS LOCAL ./output/
 
 plot:
-    BUILD +plot-random
-    BUILD +plot-precipitation
-    BUILD +plot-pacman
+    ARG pad_inches="0"
+    BUILD +plot-random --pad_inches="$pad_inches"
+    BUILD +plot-precipitation --pad_inches="$pad_inches"
+    BUILD +plot-pacman --pad_inches="$pad_inches"
+
+plot-with-padding:
+    BUILD +plot --pad_inches="4"
