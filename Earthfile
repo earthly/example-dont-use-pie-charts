@@ -8,10 +8,6 @@ code:
     WORKDIR /dontusepiecharts
     COPY --dir data .
     COPY --dir dontusepiecharts .
-    ARG pad_inches="0"
-    ARG font_size=""
-    ENV NOPIE_pad_inches="$pad_inches"
-    ENV NOPIE_font_size="$font_size"
 
 plot-random:
     FROM +code
@@ -28,12 +24,20 @@ plot-pacman:
     RUN python3 dontusepiecharts/pacman.py
     SAVE ARTIFACT *.png AS LOCAL ./output/
 
+plot-box-and-whisker-diagram:
+    FROM +code
+    RUN python3 dontusepiecharts/box-and-whisker-diagram.py
+    SAVE ARTIFACT *.png AS LOCAL ./output/
+
 plot:
-    ARG pad_inches="0"
-    ARG font_size=""
-    BUILD +plot-random --pad_inches="$pad_inches" --font_size="$font_size"
-    BUILD +plot-precipitation --pad_inches="$pad_inches" --font_size="$font_size"
-    BUILD +plot-pacman --pad_inches="$pad_inches" --font_size="$font_size"
+    BUILD +plot-random
+    BUILD +plot-precipitation
+    BUILD +plot-pacman
+    BUILD +plot-box-and-whisker-diagram
+
+
+# The targets below are just for performing image resizing using opencv
+# They are not part of the plotting examples
 
 cv2-deps:
     FROM +deps
