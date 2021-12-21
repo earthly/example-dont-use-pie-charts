@@ -13,8 +13,15 @@ def get_extra_args():
         val = os.environ.get('NOPIE_' + extra_arg_key)
         if val:
             savefig_args[extra_arg_key] = parser(val)
-    print(savefig_args)
-    print(os.environ)
+
+    font = {}
+    font_size = os.environ.get('NOPIE_font_size')
+    if font_size:
+        font_size = int(font_size)
+        font['size'] = font_size
+        savefig_args['textprops'] = {'fontsize': font_size}
+    savefig_args['font'] = font
+
     return savefig_args
 
 savefig_args = get_extra_args()
@@ -40,7 +47,10 @@ def process_data(data, labels, sort, reverse, percentage, format_percentage):
 def plot_pie(data, labels, output_path):
     fig = plt.figure(figsize=(10.0, 10.0), dpi=100)
     ax = fig.add_axes([0,0,1,1])
-    ax.pie(data, labels=labels)
+    if 'textprops' in savefig_args:
+        ax.pie(data, labels=labels, textprops=savefig_args['textprops'])
+    else:
+        ax.pie(data, labels=labels)
     fig.savefig(output_path, bbox_inches='tight', **savefig_args)
 
 def plot_bar(data, labels, output_path, sort=True, reverse=False, percentage=False, format_percentage=False):

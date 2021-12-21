@@ -44,7 +44,7 @@ def get_total_rainfall(val):
     return (total_rainfall, year)
 
 def format_days_since_jan1(days, pos=None):
-    date = datetime.date(2020, 1, 1) + datetime.timedelta(days)
+    date = datetime.date(2021, 1, 1) + datetime.timedelta(days)
     return date.strftime('%b')
 
 
